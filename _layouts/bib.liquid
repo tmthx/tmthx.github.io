@@ -170,18 +170,39 @@
     {% if entry.year %}
       {% capture entryyear %}{{ " " }}{{ entry.year }}{% endcapture %}
     {% endif %}
+    {% capture entry_volume_issue %}{% endcapture %}
+    {% if entry.volume %}
+      {% capture entry_volume_issue -%}
+        <em>{{ entry.volume }}</em>
+        {%- if entry.number %}({{ entry.number }}){% endif -%}
+      {%- endcapture %}
+    {% endif %}
     {% if entry.location %}
       {% capture entrytype %}{{ entrytype }}{{ ", " }}{{ entry.location }}{% endcapture %}
     {% endif -%}
     {% if entry.additional_info %}
       {% capture entrytype %}{{ entrytype }}{{ entry.additional_info | markdownify | remove: '<p>' | remove: '</p>' }}{% endcapture %}
     {% endif %}
+    {% capture entry_identifier %}{% endcapture %}
+    {% if entry.pages %}
+      {% assign page_range = entry.pages | replace: '--', '–' %}
+      {% capture entry_identifier %}pp. {{ page_range }}{% endcapture %}
+    {% elsif entry.eid %}
+      {% capture entry_identifier %}Article {{ entry.eid }}{% endcapture %}
+    {% endif %}
     {% capture hook_exists %}{% file_exists _includes/hook/bib.liquid %}{% endcapture %}
     {% if hook_exists == 'true' %}
       {% include hook/bib.liquid %}
     {% endif %}
     {% assign entrytype_text = entrytype | strip_html | strip %}
-    {% capture periodical %}{{ entrytype }}{% if entrytype_text != "" and entryyear != "" %}, {% endif %}{{ entrymonth }}{{ entryyear }}{% endcapture %}
+    {% capture periodical -%}
+      {{ entrytype }}
+      {%- if entry_volume_issue != "" -%}
+        {%- if entrytype_text != "" %}, {% endif -%}
+        {{ entry_volume_issue }}
+      {%- endif -%}
+      {%- if entry_identifier != "" %}, {{ entry_identifier }}{% endif -%}
+    {%- endcapture %}
     <div class="periodical">
       {{ periodical | strip }}
     </div>
