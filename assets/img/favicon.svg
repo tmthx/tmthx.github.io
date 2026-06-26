@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <circle cx="64" cy="64" r="58" fill="#fff"/>
+  <text
+    x="55"
+    y="93"
+    text-anchor="middle"
+    font-family="'Snell Roundhand', 'Apple Chancery', 'Brush Script MT', 'URW Chancery L', cursive"
+    font-size="86"
+    font-weight="600"
+    fill="#000"
+  >T</text>
+</svg>
