@@ -3,14 +3,14 @@ layout: about
 title: About
 permalink: /
 subtitle: >
-        <a href='https://www.cl.uzh.ch/en.html'>Department of Computational Linguistics, University of Zurich</a> <br>
-        AND 2.76, Andreasstrasse 15, 8050 Zurich, Switzerland
+  <a href='https://www.cl.uzh.ch/en.html'>Department of Computational Linguistics, University of Zurich</a> <br>
+  AND 2.76, Andreasstrasse 15, 8050 Zurich, Switzerland
 
 profile:
   align: right
   image: prof_pic_color.jpg
   image_circular: false # crops the image to make it circular
-  more_info: # >
+  more_info:# >
     #  AND 2.76<br>
     #  Andreasstrasse 15<br>
     #  8050 Zurich<br>
