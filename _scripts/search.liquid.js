@@ -28,7 +28,6 @@ ninja.data = [
               {%- if child.permalink contains "/blog/" -%}{%- assign url = "/blog/" -%} {%- else -%}{%- assign url = child.permalink -%}{%- endif -%}
               id: "dropdown-{{ title | slugify }}",
               title: "{{ title | truncatewords: 13 }}",
-              description: "{{ child.description | strip_html | strip_newlines | escape | strip }}",
               section: "Dropdown",
               handler: () => {
                 window.location.href = "{{ url | relative_url }}";
@@ -43,7 +42,6 @@ ninja.data = [
           {%- if p.permalink contains "/blog/" -%}{%- assign url = "/blog/" -%} {%- else -%}{%- assign url = p.url -%}{%- endif -%}
           id: "nav-{{ title | slugify }}",
           title: "{{ title | truncatewords: 13 }}",
-          description: "{{ p.description | strip_html | strip_newlines | escape | strip }}",
           section: "Navigation",
           handler: () => {
             window.location.href = "{{ url | relative_url }}";
@@ -64,7 +62,6 @@ ninja.data = [
         {% else %}
           title: "{{ title | truncatewords: 13 }}",
         {% endif %}
-        description: "{{ post.description | strip_html | strip_newlines | escape | strip }}",
         section: "Posts",
         handler: () => {
           {% if post.redirect == blank %}
@@ -81,6 +78,13 @@ ninja.data = [
   {%- for collection in site.collections -%}
     {%- if collection.label != 'posts' -%}
       {%- for item in collection.docs -%}
+        {%- assign include_item_in_search = false -%}
+        {%- if collection.label == 'projects' and item.show == true -%}
+          {%- assign include_item_in_search = true -%}
+        {%- elsif item.search == true -%}
+          {%- assign include_item_in_search = true -%}
+        {%- endif -%}
+        {%- if include_item_in_search -%}
         {
           {%- if item.inline -%}
             {%- assign title = item.content | newline_to_br | replace: "<br />", " " | replace: "<br/>", " " | strip_html | strip_newlines | escape | strip -%}
@@ -89,7 +93,6 @@ ninja.data = [
           {%- endif -%}
           id: "{{ collection.label }}-{{ title | slugify }}",
           title: '{{ title | escape | emojify | truncatewords: 13 }}',
-          description: "{{ item.description | strip_html | strip_newlines | escape | strip }}",
           section: "{{ collection.label | capitalize }}",
           {%- unless item.inline -%}
             handler: () => {
@@ -97,6 +100,7 @@ ninja.data = [
             },
           {%- endunless -%}
         },
+        {%- endif -%}
       {%- endfor -%}
     {%- endif -%}
   {%- endfor -%}
@@ -305,7 +309,6 @@ ninja.data = [
     {
       id: 'light-theme',
       title: 'Change theme to light',
-      description: 'Change the theme of the site to Light',
       section: 'Theme',
       handler: () => {
         setThemeSetting("light");
@@ -314,7 +317,6 @@ ninja.data = [
     {
       id: 'dark-theme',
       title: 'Change theme to dark',
-      description: 'Change the theme of the site to Dark',
       section: 'Theme',
       handler: () => {
         setThemeSetting("dark");
@@ -323,7 +325,6 @@ ninja.data = [
     {
       id: 'system-theme',
       title: 'Use system default theme',
-      description: 'Change the theme of the site to System Default',
       section: 'Theme',
       handler: () => {
         setThemeSetting("system");
