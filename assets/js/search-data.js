@@ -16,6 +16,13 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/publications/";
           },
+        },{id: "nav-projects",
+          title: "Projects",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/projects/";
+          },
         },{id: "nav-cv",
           title: "CV",
           description: "",
@@ -447,6 +454,11 @@ ninja.data = [{
           description: "another project with an image 🎉",
           section: "Projects",handler: () => {
               window.location.href = "/projects/9_project/";
+            },},{id: "projects-voice-mds-map",
+          title: 'Voice MDS map',
+          description: "Interactive visualisation web app for exploring voice spaces",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/project1/";
             },},{
         id: 'social-email',
         title: 'email',
