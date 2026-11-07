@@ -4,46 +4,26 @@ module Jekyll
   module CacheBust
     class CacheDigester
       require 'digest/md5'
-      require 'pathname'
-
-      attr_accessor :file_name, :directory
-
-      def initialize(file_name:, directory: nil)
-        self.file_name = file_name
-        self.directory = directory
+      def initialize(file_name:, sources:)
+        @file_name = file_name
+        @sources = sources
       end
 
       def digest!
-        [file_name, '?', Digest::MD5.hexdigest(file_contents)].join
-      end
-
-      private
-
-      def directory_files_content
-        target_path = File.join(directory, '**', '*')
-        Dir[target_path].map{|f| File.read(f) unless File.directory?(f) }.join
-      end
-
-      def file_content
-        local_file_name = file_name.slice((file_name.index('assets/')..-1))
-        File.read(local_file_name)
-      end
-
-      def file_contents
-        is_directory? ? file_content : directory_files_content
-      end
-
-      def is_directory?
-        directory.nil?
+        digest = Digest::MD5.new
+        @sources.each { |source| digest.update(File.binread(source)) }
+        "#{@file_name}?#{digest.hexdigest}"
       end
     end
 
     def bust_file_cache(file_name)
-      CacheDigester.new(file_name: file_name, directory: nil).digest!
+      source = file_name.slice((file_name.index('assets/')..-1))
+      CacheDigester.new(file_name: file_name, sources: [source]).digest!
     end
 
     def bust_css_cache(file_name)
-      CacheDigester.new(file_name: file_name, directory: 'assets/_sass').digest!
+      sources = ['assets/css/main.scss', '_config.yml'] + Dir.glob('_sass/**/*.{scss,sass}')
+      CacheDigester.new(file_name: file_name, sources: sources).digest!
     end
   end
 end
