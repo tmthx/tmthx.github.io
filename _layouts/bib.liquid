@@ -77,10 +77,10 @@
           {%- if forloop.last and author_array_limit == author_array_size %}and {% endif -%}
         {% endif %}
         {%- if author_is_self -%}
-          <em>
+          <strong>
             {{- author.first }}
             {{ author_last_html -}}
-          </em>
+          </strong>
         {%- else -%}
           {%- if coauthor_url -%}
             <a href="{{ coauthor_url }}">
@@ -116,10 +116,10 @@
         {%- endif -%}
         , ...
         {% if author_is_self -%}
-          <em>
+          <strong>
             {{- author.first }}
             {{ author_last_html -}}
-          </em>
+          </strong>
         {%- else -%}
           {%- if coauthor_url -%}
             <a href="{{ coauthor_url }}">
@@ -150,7 +150,7 @@
     {% if entry.type == 'article' %}
       {% capture entrytype %}<em>{{ entry.journal }}</em>{% endcapture %}
     {% elsif proceedings contains entry.type %}
-      {% capture entrytype %}<em>In {{ entry.booktitle }}</em>{% endcapture %}
+      {% capture entrytype %}In <em>{{ entry.booktitle }}</em>{% endcapture %}
     {% elsif thesis contains entry.type %}
       {% capture entrytype %}<em>{{ entry.school }}</em>{% endcapture %}
     {% else %}
@@ -178,7 +178,11 @@
     {% capture entry_identifier %}{% endcapture %}
     {% if entry.pages %}
       {% assign page_range = entry.pages | replace: '--', '–' %}
-      {% capture entry_identifier %}pp. {{ page_range }}{% endcapture %}
+      {% if entry.type == 'article' %}
+        {% capture entry_identifier %}{{ page_range }}{% endcapture %}
+      {% else %}
+        {% capture entry_identifier %}pp. {{ page_range }}{% endcapture %}
+      {% endif %}
     {% elsif entry.eid %}
       {% capture entry_identifier %}Article {{ entry.eid }}{% endcapture %}
     {% endif %}
@@ -193,7 +197,9 @@
         {%- if entrytype_text != "" %}, {% endif -%}
         {{ entry_volume_issue }}
       {%- endif -%}
-      {%- if entry_identifier != "" %}, {{ entry_identifier }}{% endif -%}
+      {%- if entry_identifier != "" -%}
+        {%- if proceedings contains entry.type and entry.pages %} ({{ entry_identifier }}){% else %}, {{ entry_identifier }}{% endif -%}
+      {%- endif -%}
     {%- endcapture %}
     <div class="periodical">
       {{ periodical | strip }}
